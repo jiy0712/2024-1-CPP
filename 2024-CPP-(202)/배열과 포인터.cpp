@@ -1,5 +1,9 @@
 #include <stdio.h>
 
+void erase(void) {
+
+}
+
 int main(void) {
 	int arr[4] = {10, 20, 30, 40};
 	char str[4] = "abc";
