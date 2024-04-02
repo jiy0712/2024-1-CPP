@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="배열과 포인터 그리고 함수.cpp" />
-    <ClCompile Include="배열과 포인터.cpp">
+    <ClCompile Include="02-02 함수 오버로딩.cpp" />
+    <ClCompile Include="call by reference.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
