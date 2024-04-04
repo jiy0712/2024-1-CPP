@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <cstdbool>
+#include <string.h>
 
 int main(void) {
 	char str[30] = "develop hungry";
@@ -20,6 +21,9 @@ int main(void) {
 	}
 	str2[i] = str[i]; //널문자('\0') 복사 , 마지막은 널문자로 끝나야한다.
 	printf("%s\n", str2);
+
+	//str에 있는 내용을 str2에 복사
+	strcpy(str2, str);
 
 	str2[0] = str[0];
 	str2[1] = str[1];
