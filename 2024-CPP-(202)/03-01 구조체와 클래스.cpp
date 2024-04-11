@@ -9,7 +9,9 @@ public:
 	//생성자는 반환형이 없다. (반환형 = 리턴타입)
 
 	Student() {
-		hakbun_ = 2222;
+		//this : 자기자신을 가리키는 포인터
+		//멤버변수를 정확하게 가리킬 수 있다.
+		this -> hakbun_ = 2222;
 		name_ = "swag";
 	}
 
@@ -36,7 +38,7 @@ int main(void) {
 	//정적 할당 : 메모리는 stack에서 할당. 컴파일 시 메모리 크기가 정해짐
 	Student swag = Student();
 
-	(*jisu).show();
+	jisu->show();
 	swag.show();
 
 	//동적할당 해제
