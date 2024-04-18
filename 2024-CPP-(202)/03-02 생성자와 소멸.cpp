@@ -7,13 +7,18 @@ using namespace std;
 class Student {
 public:
 
-	//TODO : 생성자에서 동적할당을 한 메모리 공간을 지울 수 없다
 	Student(int hakbun, char* name) : hakbun_(hakbun){
 		//'/0'가 들어가기 위해 공간 하나 더 추가
 		int length = strlen(name);
 		name_ = new char[length + 1];
 
 		strcpy(name_, name);
+	}
+
+	//소멸자 : 객체가 소멸 될 때 (메모리에서 지워질 때) 호출되는 함수
+	~Student(void) {
+		delete[]name_;
+
 	}
 
 	//클래스의 멤버를 출력
