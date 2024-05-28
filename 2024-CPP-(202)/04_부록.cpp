@@ -1,37 +1,43 @@
-#include <iostream>
 #include <string>
-
+#include <iostream>
 using namespace std;
 
-class Animal {
-protected: // private에서 protected로 변경
-    string name;
-    int age;
-
+class Person {
 public:
-    Animal(string _name, int _age) : name(_name), age(_age) {}
+	Person(string name, int age)
+		: name_(name), age_(age){}
 
-    virtual void sound() = 0; // 순수 가상 함수로 변경
-    virtual ~Animal() {} // 가상 소멸자 추가
+	void ShowPerson() {
+		cout << name_ << "의 나이는 " << age_ << "입니다." << endl;
+	}
+	void ShowPerson() {
+		cout << id_;
+		Person::ShowPerson();
+	}
+
+private:
+	string name_;
+	int age_;
+
 };
 
-class Dog : public Animal {
+class Student : public Person {
 public:
-    Dog(string _name, int _age) : Animal(_name, _age) {}
+	//부모생성자가 먼저 호출
+	Student(string name, int age, int id) : Person(name, age), id_(id) {
 
-    void bark() {
-        cout << "왈 왈" << endl;
-    }
-
-    void sound() override {
-        bark();
-    }
+	}
+	void show_person() {
+		cout << id_ << " ";
+		Person::ShowPerson(); //부모 클래스의 멤버함수 호출
+}
+private:
+	int id_;
 };
 
-int main() {
-    Dog myDog("Buddy", 3);
-    
-    myDog.sound();
+int main(void) {
 
-    return 0;
+	Student* stu = new Student("조드리헵번", 39, 1004);
+	stu->show_person();
+	return 0;
 }
