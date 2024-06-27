@@ -130,6 +130,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SFML.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Glyph.hpp" />
+    <ClInclude Include="Vector2.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
