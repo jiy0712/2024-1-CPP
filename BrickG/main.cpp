@@ -1,27 +1,33 @@
 #include <SFML/Graphics.hpp>
+#include <vector>
 
-// Ball í´ë˜ìŠ¤ ì •ì˜
+// Ball Å¬·¡½º Á¤ÀÇ
 class Ball {
 public:
-    sf::CircleShape shape;
-    sf::Vector2f velocity;
+    sf::CircleShape shape;  // °øÀÇ ¿ÜÇü
+    sf::Vector2f velocity;  // °øÀÇ ¼Óµµ
 
     Ball(float mX, float mY) {
         shape.setPosition(mX, mY);
         shape.setRadius(10.f);
-        shape.setFillColor(sf::Color::Red);
+        shape.setFillColor(sf::Color::Magenta);
         shape.setOrigin(10.f, 10.f);
         velocity = { -8.f, -8.f };
     }
 
     void update() {
-        shape.move(velocity);
+        // °øÀ» ¿òÁ÷ÀÌ°Ô ÇÔ
+         shape.move(velocity);
 
-        if (left() < 0) velocity.x = 8.f;
-        else if (right() > 800) velocity.x = -8.f;
+        if (left() < 0) 
+            velocity.x = 8.f;
+        else if (right() > 800) 
+            velocity.x = -8.f;
 
-        if (top() < 0) velocity.y = 8.f;
-        else if (bottom() > 600) velocity.y = -8.f;
+        if (top() < 0) 
+            velocity.y = 8.f;
+        else if (bottom() > 600) 
+            velocity.y = -8.f;
     }
 
     float left() { return shape.getPosition().x - shape.getRadius(); }
@@ -30,7 +36,7 @@ public:
     float bottom() { return shape.getPosition().y + shape.getRadius(); }
 };
 
-// Paddle í´ë˜ìŠ¤ ì •ì˜
+// Paddle Å¬·¡½º Á¤ÀÇ
 class Paddle {
 public:
     sf::RectangleShape shape;
@@ -42,12 +48,11 @@ public:
         shape.setPosition(mX, mY);
         shape.setSize({ paddleWidth, paddleHeight });
         shape.setFillColor(sf::Color::Blue);
-        // ê¸°ì¤€ì ì„ ì¤‘ì‹¬ìœ¼ë¡œ
-        shape.setOrigin(paddleWidth / 2.f, paddleHeight / 2.f);
+        shape.setOrigin(paddleWidth / 2.f, paddleHeight / 2.f);     // ±âÁØÁ¡À» Áß½ÉÀ¸·Î
     }
 
     void update() {
-        // ì™¼ìª½ í™”ì‚´í‚¤ë¥¼ ëˆ„ë¥´ê³  && ì™¼ìª½ ëì— ë„ë‹¬í•˜ì§€ ì•Šì€ ê²½ìš°
+        // ¿ŞÂÊ È­»ìÇ¥ Å°¸¦ ´©¸£°í && ¿ŞÂÊ º®¿¡ ´êÁö ¾ÊÀ» ¶§
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) && left() > 0) {
             shape.move(-paddleVelocity, 0.f);
         }
@@ -58,46 +63,92 @@ public:
 
     float left() { return shape.getPosition().x - shape.getSize().x / 2.f; }
     float right() { return shape.getPosition().x + shape.getSize().x / 2.f; }
-    // ì§€ê¸ˆ ë‹¹ì¥ì€ ì“¸ëª¨ê°€ ì—†ì§€ë§Œ, í™•ì¥ì„ ê³ ë ¤í•´ì„œ ì¼ë‹¨ ë†”ë‘ê² ë‹¤.
     float top() { return shape.getPosition().y - shape.getSize().y / 2.f; }
     float bottom() { return shape.getPosition().y + shape.getSize().y / 2.f; }
 };
 
-int main()
-{
-    // ì°½ ìƒì„±
-    sf::RenderWindow window(sf::VideoMode(800, 600), "bricks");
-    window.setFramerateLimit(60);   // ì´ˆë‹¹ í”„ë ˆì„ì„ 60ìœ¼ë¡œ
+// Brick Å¬·¡½º Á¤ÀÇ
+class Brick {
+public:
+    sf::RectangleShape shape;
+    bool destroyed = false;
+    
+    Brick() {
+        shape.setSize({ 60.f, 20.f });
+        shape.setFillColor(sf::Color::Yellow);
+        shape.setOrigin(30.f, 10.f);
+    }
 
-    Ball ball(800 / 2f, 300.f);
-    Paddle paddle(600.f, 550.f);
+    Brick(float mX, float mY) {
+        shape.setPosition(mX, mY);
+        shape.setSize({ 60.f, 20.f });
+        shape.setFillColor(sf::Color::Yellow);
+        shape.setOrigin(30.f, 10.f);
+    }
 
-    // ì´ë²¤íŠ¸ ë£¨í”„ ì‹œì‘
-    while (window.isOpen())
-    {
+    void setPosition(float mX, float mY) {
+        shape.setPosition(mX, mY);
+    }
+};
+
+const int windowWidth = 800;
+const int windowHeight = 600;
+const int brickRows = 5;
+const int brickColumns = 10;
+const float brickWidth = 60.f;
+const float brickHeight = 20.f;
+
+int main() {
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Brick");
+    window.setFramerateLimit(60);   // 1ÃÊ¿¡ 60 ÇÁ·¹ÀÓÀ¸·Î Á¦ÇÑ
+
+    Ball ball(windowWidth / 2, windowHeight / 2);
+    Paddle paddle(windowWidth / 2, windowHeight - 50);
+
+    Brick bricks[brickRows][brickColumns];
+    for (int i = 0; i < brickRows; ++i) {
+        for (int j = 0; j < brickColumns; ++j) {
+            bricks[i][j].setPosition((j + 1) * (brickWidth + 10), (i + 1) * (brickHeight + 10));
+        }
+    }
+
+    while (window.isOpen()) {
         sf::Event event;
-        while (window.pollEvent(event))
-        {
-            // x ë§ˆí¬ë¥¼ ëˆ„ë¥´ë©´
+        while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
 
         // update
-        paddle.update();
         ball.update();
-        if (ball.shape.getGlobalBounds().intersects(paddle.shape.getGlovalVounds())) {
+        paddle.update();
+        
+        // °ø°ú ÆĞµéÀÇ Ãæµ¹Ã³¸®
+        if (ball.shape.getGlobalBounds().intersects(paddle.shape.getGlobalBounds())) {
             ball.velocity.y = -ball.velocity.y;
         }
 
+        for (int i = 0; i < brickRows; i++) {
+            for (int j = 0; j < brickColumns; j++) {
+                if (bricks[i][j].destroyed) continue;
+                if (ball.shape.getGlobalBounds().intersects(bricks[i][j].shape.getGlobalBounds())) {
+                    ball.velocity.y = -ball.velocity.y;
+                    bricks[i][j].destroyed = true;
+                }
+            }
+        }
+
         // draw
-        // í™”ë©´ ì§€ìš°ê¸°
-        window.clear(sf::Color::White);
 
-        // ê·¸ë¦¬ê¸°
+        window.clear();
+        window.draw(ball.shape);
         window.draw(paddle.shape);
-
-        // í™”ë©´ ì—…ë°ì´íŠ¸
+        for (int i = 0; i < brickRows; i++) {
+            for (int j = 0; j < brickColumns; j++) {
+                if (!bricks[i][j].destroyed)
+                    window.draw(bricks[i][j].shape);
+            }
+        }
         window.display();
     }
 
